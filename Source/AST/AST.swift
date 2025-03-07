@@ -18,7 +18,11 @@
 
 // Inspired by: https://github.com/chriseidhof/commonmark-swift
 
+#if canImport(UIKit)
 import UIKit
+#else
+import AppKit
+#endif
 import Foundation
 import libcmark
 

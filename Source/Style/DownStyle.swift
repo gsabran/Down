@@ -17,32 +17,42 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+
+public typealias Font = UIFont
+public typealias Color = UIColor
+#else
+import AppKit
+
+public typealias Font = NSFont
+public typealias Color = NSColor
+#endif
 
 
 @objc public class DownStyle: NSObject {
     
     public typealias Attributes = [NSAttributedString.Key : Any]
     
-    @objc public var baseFont = UIFont.systemFont(ofSize: 17)
-    @objc public var baseFontColor = UIColor.black
+    @objc public var baseFont = Font.systemFont(ofSize: 17)
+    @objc public var baseFontColor = Color.black
     @objc public var baseParagraphStyle = NSParagraphStyle.default.with(topSpacing: 8, bottomSpacing: 8)
     
-    public var codeFont = UIFont(name: "Menlo", size: 17) ?? UIFont.systemFont(ofSize: 17)
-    public var codeColor: UIColor? = UIColor.darkGray
+    public var codeFont = Font(name: "Menlo", size: 17) ?? Font.systemFont(ofSize: 17)
+    public var codeColor: Color? = Color.darkGray
     
     public var headerParagraphStyle = NSParagraphStyle.default.with(topSpacing: 8, bottomSpacing: 8)
     
-    public var h1Color: UIColor?
+    public var h1Color: Color?
     public var h1Size: CGFloat = 27
     
-    public var h2Color: UIColor?
+    public var h2Color: Color?
     public var h2Size: CGFloat = 24
     
-    public var h3Color: UIColor?
+    public var h3Color: Color?
     public var h3Size: CGFloat = 20
     
-    public var quoteColor: UIColor? = .gray
+    public var quoteColor: Color? = .gray
     public var quoteParagraphStyle: NSParagraphStyle? = NSParagraphStyle.default.indentedBy(points: 24)
 
     /// If true, then only links with valid urls will be rendered. Invalid links
@@ -52,7 +62,7 @@ import UIKit
     /// The amount of space between the prefix and content of a list item
     public var listItemPrefixSpacing: CGFloat = 8
     
-    @objc public var listItemPrefixColor: UIColor?
+    @objc public var listItemPrefixColor: Color?
     
     /// The minimum prefix width is used to determine the alignment rule for
     /// list items. It will always have enough space to fit 2-digit prefixes.
@@ -97,7 +107,7 @@ import UIKit
     }
     
     var listPrefixAttributes: Attributes {
-        let font = UIFont.monospacedDigitSystemFont(ofSize: baseFont.pointSize, weight: .light)
+        let font = Font.monospacedDigitSystemFont(ofSize: baseFont.pointSize, weight: .light)
         return [.font: font,
                 .foregroundColor: listItemPrefixColor ?? baseFontColor
         ]
@@ -133,7 +143,7 @@ import UIKit
         }
     }
     
-    public func headerColor(for markdown: Markdown) -> UIColor? {
+    public func headerColor(for markdown: Markdown) -> Color? {
         switch markdown {
         case .h1:   return h1Color
         case .h2:   return h2Color
@@ -243,16 +253,16 @@ extension NSParagraphStyle {
 }
 
 
-public extension UIFont {
+public extension Font {
     
     /// A copy of the font without the light weight.
-    var withoutLightWeight: UIFont {
+    var withoutLightWeight: Font {
         guard fontName.contains("Light") else { return self }
         
         // WORKAROUND: remove font weight by re-creating the font using the system font.
         // This will break if you use Down with a custom font. We should find a better
-	// way to solve this problem, but that probably requires architectural changes.
-        let font = UIFont.systemFont(ofSize: pointSize)
+        // way to solve this problem, but that probably requires architectural changes.
+        let font = Font.systemFont(ofSize: pointSize)
         
         // preserve italic trait
         return isItalic ? font.italic : font
@@ -261,35 +271,65 @@ public extension UIFont {
     // MARK: - Trait Querying
     
     var isBold: Bool {
+        #if canImport(UIKit)
         return contains(.traitBold)
+        #else
+        return contains(.bold)
+        #endif
     }
     
     var isItalic: Bool {
+        #if canImport(UIKit)
         return contains(.traitItalic)
+        #else
+        return contains(.italic)
+        #endif
     }
     
+    #if canImport(UIKit)
     private func contains(_ trait: UIFontDescriptor.SymbolicTraits) -> Bool {
         return fontDescriptor.symbolicTraits.contains(trait)
     }
+    #else
+    private func contains(_ trait: NSFontDescriptor.SymbolicTraits) -> Bool {
+        return fontDescriptor.symbolicTraits.rawValue & trait.rawValue != 0
+    }
+    #endif
     
     // MARK: - Set Traits
     
-    var bold: UIFont {
+    var bold: Font {
+        #if canImport(UIKit)
         return self.with(.traitBold)
+        #else
+        return self.with(.bold)
+        #endif
     }
     
-    var italic: UIFont {
+    var italic: Font {
+        #if canImport(UIKit)
         return self.with(.traitItalic)
+        #else
+        return self.with(.italic)
+        #endif
     }
     
     /// Returns a copy of the font with the added symbolic trait.
-    private func with(_ trait: UIFontDescriptor.SymbolicTraits) -> UIFont {
+    #if canImport(UIKit)
+    private func with(_ trait: UIFontDescriptor.SymbolicTraits) -> Font {
         guard !contains(trait) else { return self }
         var traits = fontDescriptor.symbolicTraits
         traits.insert(trait)
         guard let newDescriptor = fontDescriptor.withSymbolicTraits(traits) else { return self }
-        // size 0 means the size remains the same as before
-        return UIFont(descriptor: newDescriptor, size: 0)
+        return Font(descriptor: newDescriptor, size: 0)
     }
+    #else
+    private func with(_ trait: NSFontDescriptor.SymbolicTraits) -> Font {
+        guard !contains(trait) else { return self }
+        let traits = NSFontDescriptor.SymbolicTraits(rawValue: fontDescriptor.symbolicTraits.rawValue | trait.rawValue)
+        let newDescriptor = fontDescriptor.withSymbolicTraits(traits)
+        return Font(descriptor: newDescriptor, size: 0) ?? self
+    }
+    #endif
 }
 
