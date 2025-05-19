@@ -34,35 +34,35 @@ public typealias Color = NSColor
     
     public typealias Attributes = [NSAttributedString.Key : Any]
     
-    @objc public var baseFont = Font.systemFont(ofSize: 17)
-    @objc public var baseFontColor = Color.black
-    @objc public var baseParagraphStyle = NSParagraphStyle.default.with(topSpacing: 8, bottomSpacing: 8)
+    @objc open var baseFont = Font.systemFont(ofSize: 17)
+    @objc open var baseFontColor = Color.black
+    @objc open var baseParagraphStyle = NSParagraphStyle.default.with(topSpacing: 8, bottomSpacing: 8)
     
-    public var codeFont = Font(name: "Menlo", size: 17) ?? Font.systemFont(ofSize: 17)
-    public var codeColor: Color? = Color.darkGray
+    open var codeFont = Font(name: "Menlo", size: 17) ?? Font.systemFont(ofSize: 17)
+    open var codeColor: Color? = Color.darkGray
     
-    public var headerParagraphStyle = NSParagraphStyle.default.with(topSpacing: 8, bottomSpacing: 8)
+    open var headerParagraphStyle = NSParagraphStyle.default.with(topSpacing: 8, bottomSpacing: 8)
     
-    public var h1Color: Color?
-    public var h1Size: CGFloat = 27
+    open var h1Color: Color?
+    open var h1Size: CGFloat = 27
     
-    public var h2Color: Color?
-    public var h2Size: CGFloat = 24
+    open var h2Color: Color?
+    open var h2Size: CGFloat = 24
     
-    public var h3Color: Color?
-    public var h3Size: CGFloat = 20
+    open var h3Color: Color?
+    open var h3Size: CGFloat = 20
     
-    public var quoteColor: Color? = .gray
-    public var quoteParagraphStyle: NSParagraphStyle? = NSParagraphStyle.default.indentedBy(points: 24)
+    open var quoteColor: Color? = .gray
+    open var quoteParagraphStyle: NSParagraphStyle? = NSParagraphStyle.default.indentedBy(points: 24)
 
     /// If true, then only links with valid urls will be rendered. Invalid links
     /// will be rendered as raw markdown.
-    public var renderOnlyValidLinks = true
+    open var renderOnlyValidLinks = true
         
     /// The amount of space between the prefix and content of a list item
-    public var listItemPrefixSpacing: CGFloat = 8
+    open var listItemPrefixSpacing: CGFloat = 8
     
-    @objc public var listItemPrefixColor: Color?
+    @objc open var listItemPrefixColor: Color?
     
     /// The minimum prefix width is used to determine the alignment rule for
     /// list items. It will always have enough space to fit 2-digit prefixes.
@@ -71,12 +71,12 @@ public typealias Color = NSColor
     }()
     
     /// Returns the width of the given prefix (in points) after applying its style.
-    func widthOfListPrefix(_ prefix: String) -> CGFloat {
+    open func widthOfListPrefix(_ prefix: String) -> CGFloat {
         let attrPrefix = NSAttributedString(string: prefix, attributes: self.listPrefixAttributes)
         return attrPrefix.size().width
     }
     
-    var defaultAttributes: Attributes {
+    open var defaultAttributes: Attributes {
         return [.markdown: Markdown.none,
                 .font: baseFont,
                 .foregroundColor: baseFontColor,
@@ -84,50 +84,50 @@ public typealias Color = NSColor
         ]
     }
     
-    var boldAttributes: Attributes {
+    open var boldAttributes: Attributes {
         return [.markdown: Markdown.bold]
     }
     
-    var italicAttributes: Attributes {
+    open var italicAttributes: Attributes {
         return [.markdown: Markdown.italic]
     }
     
-    var codeAttributes: Attributes {
+    open var codeAttributes: Attributes {
         return [.markdown: Markdown.code,
                 .font: codeFont,
                 .foregroundColor: codeColor ?? baseFontColor,
         ]
     }
     
-    var quoteAttributes: Attributes {
+    open var quoteAttributes: Attributes {
         return [.markdown: Markdown.quote,
                 .foregroundColor: quoteColor ?? baseFontColor,
                 .paragraphStyle: quoteParagraphStyle ?? baseParagraphStyle,
         ]
     }
     
-    var listPrefixAttributes: Attributes {
+    open var listPrefixAttributes: Attributes {
         let font = Font.monospacedDigitSystemFont(ofSize: baseFont.pointSize, weight: .light)
         return [.font: font,
                 .foregroundColor: listItemPrefixColor ?? baseFontColor
         ]
     }
 
-    var h1Attributes: Attributes {
+    open var h1Attributes: Attributes {
         return [.markdown: Markdown.h1,
                 .foregroundColor: h1Color ?? baseFontColor,
                 .paragraphStyle: headerParagraphStyle
         ]
     }
     
-    var h2Attributes: Attributes {
+    open var h2Attributes: Attributes {
         return [.markdown: Markdown.h2,
                 .foregroundColor: h2Color ?? baseFontColor,
                 .paragraphStyle: headerParagraphStyle
         ]
     }
     
-    var h3Attributes: Attributes {
+    open var h3Attributes: Attributes {
         return [.markdown: Markdown.h3,
                 .foregroundColor: h3Color ?? baseFontColor,
                 .paragraphStyle: headerParagraphStyle
@@ -166,7 +166,7 @@ public typealias Color = NSColor
         return nil
     }
     
-    private func attributes(for block: Block) -> Attributes? {
+    open func attributes(for block: Block) -> Attributes? {
         switch block {
         case .blockQuote(_):
             return quoteAttributes
@@ -198,7 +198,7 @@ public typealias Color = NSColor
         }
     }
     
-    private func attributes(for inline: Inline) -> Attributes? {
+    open func attributes(for inline: Inline) -> Attributes? {
         switch inline {
         case .text(_), .custom(_):
             return defaultAttributes
