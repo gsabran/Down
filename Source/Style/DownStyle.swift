@@ -30,7 +30,7 @@ public typealias Color = NSColor
 #endif
 
 
-@objc public class DownStyle: NSObject {
+@objc open class DownStyle: NSObject {
     
     public typealias Attributes = [NSAttributedString.Key : Any]
     
