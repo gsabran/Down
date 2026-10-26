@@ -15,7 +15,8 @@ Pod::Spec.new do |spec|
   spec.module_name = "Down"
   spec.swift_versions = ["5.0"]
   spec.preserve_path = 'libcmark/include/module.modulemap'
-  spec.pod_target_xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_TARGET_SRCROOT)/libcmark/include' }
+  spec.pod_target_xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(inherited) $(PODS_TARGET_SRCROOT)/libcmark/include' }
+  spec.user_target_xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(inherited) $(PODS_ROOT)/Down/libcmark/include' }
   spec.ios.resource = 'Resources/DownView.bundle'
   spec.osx.resource = 'Resources/DownView.bundle'
 end
