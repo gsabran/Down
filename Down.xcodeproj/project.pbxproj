@@ -663,7 +663,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SWIFT_INCLUDE_PATHS = "${SRCROOT}/libcmark";
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}/libcmark/include";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -682,7 +682,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SWIFT_INCLUDE_PATHS = "${SRCROOT}/libcmark";
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}/libcmark/include";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

@@ -27,6 +27,9 @@ jobs:
       - name: Build Swift package
         run: swift build
 
+      - name: Lint CocoaPods specification
+        run: pod lib lint Down.podspec --allow-warnings
+
       - name: Build example app
         run: |
           xcodebuild \
