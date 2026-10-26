@@ -23,7 +23,7 @@ class ViewController: UIViewController {
     
     fileprivate let markdownString = """
     ## Down
-    [![Build Status](https://circleci.com/gh/gsabran/Down/tree/develop.svg?style=svg)](https://circleci.com/gh/gsabran/Down/tree/develop)
+    [![Build Status](https://github.com/gsabran/Down/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/gsabran/Down/actions/workflows/ci.yml)
     [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/iwasrobbed/Down/blob/master/LICENSE)
     [![CocoaPods](https://img.shields.io/cocoapods/v/Down.svg?maxAge=10800)]()
     [![Swift 6.4](https://img.shields.io/badge/language-Swift%206.4-blue.svg)](https://swift.org)
