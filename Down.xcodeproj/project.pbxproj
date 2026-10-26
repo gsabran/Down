@@ -693,6 +693,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = "Resources/DownTests-Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.glazeddonut.DownTests;
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}/libcmark/include";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -703,6 +704,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = "Resources/DownTests-Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.glazeddonut.DownTests;
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}/libcmark/include";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
