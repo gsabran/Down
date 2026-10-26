@@ -38,21 +38,27 @@ jobs:
       - name: Inspect CocoaPods lint paths on failure
         if: failure()
         run: |
-          find "$GITHUB_WORKSPACE" "$RUNNER_TEMP" "$HOME/Library/Caches/CocoaPods" \
-            "$HOME/Library/Developer/Xcode/DerivedData" -type f \
-            \( -name module.modulemap -o -name 'Pods-App.debug.xcconfig' \) \
-            -print 2>/dev/null | while IFS= read -r path; do
-              case "$path" in
-                */module.modulemap)
-                  printf 'MODULEMAP %s\n' "$path"
-                  sed -n '1,20p' "$path"
-                  ;;
-                *)
-                  printf 'XCCONFIG %s\n' "$path"
-                  grep -E 'PODS_ROOT|SWIFT_INCLUDE_PATHS' "$path" || true
-                  ;;
-              esac
-            done
+          python3 - <<'PY'
+          import glob
+          import os
+          import re
+
+          log_path = os.path.join(os.environ["RUNNER_TEMP"], "pod-lint.log")
+          with open(log_path, encoding="utf-8") as log_file:
+              roots = sorted(set(re.findall(r"/var/folders/[^\s\\]+/CocoaPods-Lint-[^/\s\\]+", log_file.read())))
+
+          for root in roots:
+              print(f"LINT_ROOT {root}")
+              for config in glob.glob(os.path.join(root, "Pods/Target Support Files/Pods-App/*.xcconfig")):
+                  print(f"XCCONFIG {config}")
+                  with open(config, encoding="utf-8") as config_file:
+                      for line in config_file:
+                          if "PODS_ROOT" in line or "SWIFT_INCLUDE_PATHS" in line:
+                              print(line.rstrip())
+              for candidate in ("Pods/Down/libcmark/include/module.modulemap", "libcmark/include/module.modulemap"):
+                  path = os.path.join(root, candidate)
+                  print(f"MODULEMAP_EXISTS {path} {os.path.exists(path)}")
+          PY
 
       - name: Build example app
         run: |
