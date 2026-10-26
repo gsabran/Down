@@ -28,45 +28,7 @@ jobs:
         run: swift build
 
       - name: Lint CocoaPods specification
-        run: |
-          set +e
-          pod lib lint Down.podspec --allow-warnings --no-clean --verbose > "$RUNNER_TEMP/pod-lint.log" 2>&1
-          lint_status=$?
-          grep -E 'ERROR|error:|warning:|did not pass validation|Linting using|PODS_ROOT|SWIFT_INCLUDE_PATHS|libcmark' "$RUNNER_TEMP/pod-lint.log" | tail -80 || true
-          exit "$lint_status"
-
-      - name: Inspect CocoaPods lint paths on failure
-        if: failure()
-        run: |
-          python3 - <<'PY'
-          import glob
-          import os
-          import re
-
-          log_path = os.path.join(os.environ["RUNNER_TEMP"], "pod-lint.log")
-          with open(log_path, encoding="utf-8") as log_file:
-              roots = sorted(set(re.findall(r"/var/folders/[^\s\\]+/CocoaPods-Lint-[^/\s\\]+", log_file.read())))
-
-          for root in roots:
-              print(f"LINT_ROOT {root}")
-              for config in glob.glob(os.path.join(root, "Pods/Target Support Files/Pods-App/*.xcconfig")):
-                  print(f"XCCONFIG {config}")
-                  with open(config, encoding="utf-8") as config_file:
-                      for line in config_file:
-                          if "PODS_ROOT" in line or "PODS_CONFIGURATION_BUILD_DIR" in line or "SWIFT_INCLUDE_PATHS" in line:
-                              print(line.rstrip())
-              for candidate in (
-                  "Pods/Down/libcmark/include/module.modulemap",
-                  "libcmark/include/module.modulemap",
-                  "Pods/Target Support Files/Down/Down.modulemap",
-              ):
-                  path = os.path.join(root, candidate)
-                  print(f"MODULEMAP_EXISTS {path} {os.path.exists(path)}")
-              for candidate in glob.glob(os.path.join(os.environ["HOME"], "Library/Developer/Xcode/DerivedData/App-*/Build/Products/Release/Down/Down.framework/Modules/module.modulemap")):
-                  print(f"FRAMEWORK_MODULEMAP {candidate}")
-              for candidate in glob.glob(os.path.join(os.environ["HOME"], "Library/Developer/Xcode/DerivedData/App-*/Build/Products/Release/Down/Down.framework/Headers/node.h")):
-                  print(f"FRAMEWORK_NODE_HEADER {candidate}")
-          PY
+        run: pod lib lint Down.podspec --allow-warnings
 
       - name: Build example app
         run: |
