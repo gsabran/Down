@@ -23,10 +23,10 @@ class ViewController: UIViewController {
     
     fileprivate let markdownString = """
     ## Down
-    [![Build Status](https://travis-ci.org/iwasrobbed/Down.svg?branch=master)](https://travis-ci.org/iwasrobbed/Down)
+    [![Build Status](https://circleci.com/gh/gsabran/Down/tree/develop.svg?style=svg)](https://circleci.com/gh/gsabran/Down/tree/develop)
     [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/iwasrobbed/Down/blob/master/LICENSE)
     [![CocoaPods](https://img.shields.io/cocoapods/v/Down.svg?maxAge=10800)]()
-    [![Swift 4](https://img.shields.io/badge/language-Swift-blue.svg)](https://swift.org)
+    [![Swift 6.4](https://img.shields.io/badge/language-Swift%206.4-blue.svg)](https://swift.org)
     [![macOS](https://img.shields.io/badge/OS-macOS-orange.svg)](https://developer.apple.com/macos/)
     [![iOS](https://img.shields.io/badge/OS-iOS-orange.svg)](https://developer.apple.com/ios/)
     [![tvOS](https://img.shields.io/badge/OS-tvOS-orange.svg)](https://developer.apple.com/tvos/)
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
     
     ### Installation
     
-    Note: Swift 4 support is now on the `master` branch and any tag >= 0.4.x (Swift 3 is 0.3.x)
+    The package uses Swift tools version 6.0 and Swift 5 language mode. It is built and tested with Xcode 27.1 and the Swift 6.4 compiler.
     
     Quickly install using [CocoaPods](https://cocoapods.org):
     
@@ -73,4 +73,3 @@ class ViewController: UIViewController {
     """
 
 }
-

@@ -1,78 +1,42 @@
-defaults: &defaults
-  environment:
-    - DEPENDENCIES_BASE_URL: "https://raw.githubusercontent.com/wireapp/wire-ios-shared-resources/xcode10"
-  macos:
-    xcode: "10.0.0"
-  shell: /bin/bash --login -eo pipefail
+version: 2.1
 
-# ----------------CACHING----------------
-
-# Gems
-gems_cache: &gems_cache
-  key: v4-{{ checksum "Gemfile.lock" }}
-  paths: ~/.gem
-
-# DerivedData
-buildfiles_cache: &buildfiles_cache
-  key: v2-{{ .Revision }}
-  paths: DerivedData
-
-# ------------Environment-----------------
-setup_environment: &setup_environment
-  name: "Setup environment"
-  command: |
-    mkdir -p build
-    curl -O "${DEPENDENCIES_BASE_URL}/environment.sh"
-    bash environment.sh
-
-version: 2
 jobs:
-      
-  build:
-    <<: *defaults
-    steps:
-    - checkout
-    - run: *setup_environment
-    - restore_cache: *gems_cache
-    - run: 
-        name: "Get dependencies"
-        command: bash dependencies.sh
-    - run: 
-        name: "Build"
-        command: bash build.sh
-    - save_cache: *gems_cache
-    - persist_to_workspace:
-        root: .
-        paths: 
-          - DerivedData
-          - build
-
   test:
-    <<: *defaults
+    macos:
+      xcode: "27.1.0"
     steps:
-    - checkout
-    - attach_workspace:
-        at: .
-    - run: *setup_environment
-    - restore_cache: *gems_cache
-    - run: 
-        name: "Test"
-        command: bash test.sh
-    - run: 
-        name: "Post test"
-        command: bash post_test.sh
-    - store_artifacts:
-        path: SnapshotResults
-    - store_test_results:
-        path: build/junit
+      - checkout
+      - run:
+          name: Show toolchain versions
+          command: |
+            xcodebuild -version
+            swift --version
+      - run:
+          name: Build Swift package
+          command: swift build
+      - run:
+          name: Build example app
+          command: |
+            xcodebuild \
+              -project Down-Example/Down-Example.xcodeproj \
+              -scheme Down-Example \
+              -destination 'generic/platform=iOS Simulator' \
+              CODE_SIGNING_ALLOWED=NO \
+              build
+      - run:
+          name: Run Xcode unit tests
+          command: |
+            simulator_id="$(xcrun simctl list devices available --json | python3 -c 'import json, sys; data = json.load(sys.stdin); devices = [(tuple(map(int, runtime.split("iOS-")[-1].split("-"))), device["udid"]) for runtime, entries in data["devices"].items() if runtime.startswith("com.apple.CoreSimulator.SimRuntime.iOS-") for device in entries if device.get("isAvailable")]; print(max(devices)[1] if devices else "")')"
+            test -n "$simulator_id"
+            xcodebuild \
+              -project Down.xcodeproj \
+              -scheme Down \
+              -destination "platform=iOS Simulator,id=$simulator_id" \
+              -enableCodeCoverage YES \
+              CODE_SIGNING_ALLOWED=NO \
+              test
 
-
-# ----------------WORKFLOWS----------------
 workflows:
-  version: 2
   build-and-test:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - test

@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:6.0
 
 import PackageDescription
 
@@ -6,7 +6,7 @@ let package = Package(
     name: "Down",
     platforms: [
         .iOS("15.0"),
-        .macOS("15.0"),
+        .macOS("12.0"),
     ],
     products: [
         .library(
@@ -34,5 +34,5 @@ let package = Package(
           ]
         ),
     ],
-    swiftLanguageVersions: [.v5]
+    swiftLanguageModes: [.v5]
 )

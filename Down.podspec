@@ -10,11 +10,12 @@ Pod::Spec.new do |spec|
   spec.ios.source_files = "Source/Views/**"
   spec.osx.source_files = "Source/Views/**"
   spec.public_header_files = "Source/*.h"
-  spec.ios.deployment_target = "8.0"
-  spec.tvos.deployment_target = "9.0"
-  spec.osx.deployment_target = "10.11"
+  spec.ios.deployment_target = "15.0"
+  spec.tvos.deployment_target = "15.0"
+  spec.osx.deployment_target = "12.0"
   spec.requires_arc = true
   spec.module_name = "Down"
+  spec.swift_versions = ["5.0"]
   spec.preserve_path = 'Source/cmark/module.modulemap'
   spec.pod_target_xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(SRCROOT)/Down/Source/cmark/**' }
   spec.ios.resource = 'Resources/DownView.bundle'
