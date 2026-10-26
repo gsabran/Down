@@ -53,11 +53,19 @@ jobs:
                   print(f"XCCONFIG {config}")
                   with open(config, encoding="utf-8") as config_file:
                       for line in config_file:
-                          if "PODS_ROOT" in line or "SWIFT_INCLUDE_PATHS" in line:
+                          if "PODS_ROOT" in line or "PODS_CONFIGURATION_BUILD_DIR" in line or "SWIFT_INCLUDE_PATHS" in line:
                               print(line.rstrip())
-              for candidate in ("Pods/Down/libcmark/include/module.modulemap", "libcmark/include/module.modulemap"):
+              for candidate in (
+                  "Pods/Down/libcmark/include/module.modulemap",
+                  "libcmark/include/module.modulemap",
+                  "Pods/Target Support Files/Down/Down.modulemap",
+              ):
                   path = os.path.join(root, candidate)
                   print(f"MODULEMAP_EXISTS {path} {os.path.exists(path)}")
+              for candidate in glob.glob(os.path.join(os.environ["HOME"], "Library/Developer/Xcode/DerivedData/App-*/Build/Products/Release/Down/Down.framework/Modules/module.modulemap")):
+                  print(f"FRAMEWORK_MODULEMAP {candidate}")
+              for candidate in glob.glob(os.path.join(os.environ["HOME"], "Library/Developer/Xcode/DerivedData/App-*/Build/Products/Release/Down/Down.framework/Headers/node.h")):
+                  print(f"FRAMEWORK_NODE_HEADER {candidate}")
           PY
 
       - name: Build example app

@@ -1,0 +1,10 @@
+framework module Down {
+  umbrella header "Down.h"
+  export *
+  module * { export * }
+}
+
+module libcmark [system][extern_c] {
+  header "../Headers/node.h"
+  export *
+}
