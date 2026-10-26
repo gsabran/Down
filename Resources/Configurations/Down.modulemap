@@ -1,4 +1,5 @@
 framework module Down {
+  requires objc
   umbrella header "Down.h"
   export *
 }
