@@ -28,7 +28,31 @@ jobs:
         run: swift build
 
       - name: Lint CocoaPods specification
-        run: pod lib lint Down.podspec --allow-warnings
+        run: |
+          set +e
+          pod lib lint Down.podspec --allow-warnings --no-clean --verbose > "$RUNNER_TEMP/pod-lint.log" 2>&1
+          lint_status=$?
+          grep -E 'ERROR|error:|warning:|did not pass validation|Linting using|PODS_ROOT|SWIFT_INCLUDE_PATHS|libcmark' "$RUNNER_TEMP/pod-lint.log" | tail -80 || true
+          exit "$lint_status"
+
+      - name: Inspect CocoaPods lint paths on failure
+        if: failure()
+        run: |
+          find "$GITHUB_WORKSPACE" "$RUNNER_TEMP" "$HOME/Library/Caches/CocoaPods" \
+            "$HOME/Library/Developer/Xcode/DerivedData" -type f \
+            \( -name module.modulemap -o -name 'Pods-App.debug.xcconfig' \) \
+            -print 2>/dev/null | while IFS= read -r path; do
+              case "$path" in
+                */module.modulemap)
+                  printf 'MODULEMAP %s\n' "$path"
+                  sed -n '1,20p' "$path"
+                  ;;
+                *)
+                  printf 'XCCONFIG %s\n' "$path"
+                  grep -E 'PODS_ROOT|SWIFT_INCLUDE_PATHS' "$path" || true
+                  ;;
+              esac
+            done
 
       - name: Build example app
         run: |
