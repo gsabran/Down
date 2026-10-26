@@ -1,8 +1,8 @@
 ## Down
-[![Build Status](https://travis-ci.org/iwasrobbed/Down.svg?branch=master)](https://travis-ci.org/iwasrobbed/Down)
+[![Build Status](https://github.com/gsabran/Down/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/gsabran/Down/actions/workflows/ci.yml)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/iwasrobbed/Down/blob/master/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Down.svg?maxAge=10800)]()
-[![Swift 4](https://img.shields.io/badge/language-Swift-blue.svg)](https://swift.org)
+[![Swift 6.4](https://img.shields.io/badge/language-Swift%206.4-blue.svg)](https://swift.org)
 [![macOS](https://img.shields.io/badge/OS-macOS-orange.svg)](https://developer.apple.com/macos/)
 [![iOS](https://img.shields.io/badge/OS-iOS-orange.svg)](https://developer.apple.com/ios/)
 [![tvOS](https://img.shields.io/badge/OS-tvOS-orange.svg)](https://developer.apple.com/tvos/)
@@ -20,7 +20,7 @@ Is your app using it? [Let us know!](mailto:rob@robphillips.me)
 
 ### Installation
 
-Note: Swift 4 support is now on the `master` branch and any tag >= 0.4.x (Swift 3 is 0.3.x)
+The package uses Swift tools version 6.0 and Swift 5 language mode. It is built and tested with Xcode 27.1 and the Swift 6.4 compiler.
 
 Quickly install using [CocoaPods](https://cocoapods.org): 
 
@@ -207,8 +207,8 @@ public static let ValidateUTF8 = DownOptions(rawValue: 1 << 5)
 public static let Smart = DownOptions(rawValue: 1 << 6)
 ```
 
-### Supports
-Swift, ARC & iOS 9+
+### Compatibility
+Swift 5 language mode, built with the Swift 6.4 compiler, and ARC. Swift Package Manager supports iOS 15+ and macOS 12+; CocoaPods supports iOS 15+, tvOS 15+, and macOS 12+. The Xcode configuration also retains watchOS 9+ settings.
 
 ### Markdown Specification
 

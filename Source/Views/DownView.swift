@@ -102,7 +102,10 @@ private extension DownView {
 extension DownView: WKNavigationDelegate {
 
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        guard let url = navigationAction.request.url else { return }
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.allow)
+            return
+        }
 
         switch navigationAction.navigationType {
         case .linkActivated:
