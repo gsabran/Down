@@ -4,7 +4,7 @@ framework module Down {
   module * { export * }
 }
 
-module libcmark [system][extern_c] {
+framework module libcmark [system][extern_c] {
   header "../Headers/node.h"
   export *
 }
